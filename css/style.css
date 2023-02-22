@@ -1,0 +1,48 @@
+:root {
+    --mint: #12bfae;
+    --darker-mint: #0ca192;
+    --white: #f7f7f7;
+}
+
+header {
+    text-align: center;
+}
+
+.heading {
+    color: var(--white);
+    font-size: 5rem;
+}
+
+body {
+    background-color: var(--mint);
+    font-family: 'Shantell Sans', cursive;;
+}
+
+main {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.grid {
+    margin-bottom: 4rem;
+    background: var(--darker-mint);
+    display: inline-grid;
+    grid-template-columns: repeat(3, 90px);
+    grid-template-rows: repeat(3, 90px);
+    gap: 0.5rem;
+}
+
+.square {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--mint);
+    font-size: 4rem;
+}
+
+.restartBtn {
+    font-size: 2rem;
+    padding: 1rem;
+    border: none;
+}
