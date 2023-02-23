@@ -39,9 +39,7 @@ const displayController = (() => {
     
     squares.forEach( square => {
         square.addEventListener('click', (event) => {
-            if ( gameboard.getSquare(event.target.dataset.index) !== '' ) {
-                return
-            }
+            if ( gameboard.getSquare(event.target.dataset.index) !== '' ) return;
 
             game.playRound(event.target.dataset.index)
             renderSquareContent();
@@ -67,6 +65,11 @@ const game = (() => {
 
     const playRound = (index) => {
         gameboard.setSquare(index, getPlayerSign());
+
+        if( round >= 5 ) {
+            checkWinner(index);
+        }
+
         round++;
     }
 
@@ -76,7 +79,25 @@ const game = (() => {
         } else {
             return playerO.getSign();
         }
-    }
+    };
+
+    const checkWinner = (index) => {
+        const winnableSituations = [    
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            [0, 4, 8],
+            [2, 4, 6]
+        ];
+      
+        console.log(index)
+        const subarraysWithThree = winnableSituations.filter(subarray => subarray.includes(index));
+
+        console.log(subarraysWithThree);
+      };
 
     return {playRound};
 })();
