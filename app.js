@@ -39,8 +39,7 @@ const displayController = (() => {
     
     squares.forEach( square => {
         square.addEventListener('click', (event) => {
-            if ( gameboard.getSquare(event.target.dataset.index) !== '' ) return;
-
+            if ( game.isEndGame() || gameboard.getSquare(event.target.dataset.index) !== '' ) return;
             game.playRound(event.target.dataset.index)
             renderSquareContent();
         })
@@ -48,6 +47,7 @@ const displayController = (() => {
 
     restartButton.addEventListener('click', () => {
         gameboard.resetGrid();
+        game.restartGame();
         renderSquareContent();
     });
 
@@ -62,6 +62,7 @@ const game = (() => {
     const playerX = Player("X");
     const playerO = Player("O");
     let round = 1;
+    let endGame = false;
 
     const playRound = (index) => {
         gameboard.setSquare(index, getPlayerSign());
@@ -92,12 +93,26 @@ const game = (() => {
             [0, 4, 8],
             [2, 4, 6]
         ];
-      
-        console.log(index)
-        const subarraysWithThree = winnableSituations.filter(subarray => subarray.includes(index));
 
-        console.log(subarraysWithThree);
-      };
+        const subarraysWithThree = winnableSituations.filter(subarray => subarray.includes(parseInt(index)));
+        
+        subarraysWithThree.forEach(subarray => {
+            const isWinningSituation = subarray.every(squareIndex => gameboard.getSquare(squareIndex) === getPlayerSign());
+            if (isWinningSituation) {
+              console.log("Player " + getPlayerSign() + " wins!");
+              endGame = true;
+            }
+          });
+    };
 
-    return {playRound};
+    const isEndGame = () => {
+        return endGame;
+    }
+
+    const restartGame = () => {
+        round = 1;
+        endGame = false;
+    }
+
+    return {playRound, isEndGame, restartGame};
 })();
