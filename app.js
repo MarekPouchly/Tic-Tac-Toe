@@ -82,7 +82,7 @@ const game = (() => {
         if( !gameEndedWithWinner && round !== 9 ) {
             round++;
             displayController.setMessage(`Player ${getPlayerSign()} turn`);
-        } else if ( round === 9 ) {
+        } else if ( !gameEndedWithWinner && round === 9 ) {
             displayController.setMessage(`Tie`);
         }
     }
