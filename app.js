@@ -36,11 +36,12 @@ const gameboard = (() => {
 const displayController = (() => {
     const squares = document.querySelectorAll('.square');
     const restartButton = document.querySelector('.restartBtn');
+    const playerTurn = document.querySelector('.playerTurn');
     
     squares.forEach( square => {
         square.addEventListener('click', (event) => {
             if ( game.isEndGame() || gameboard.getSquare(event.target.dataset.index) !== '' ) return;
-            game.playRound(event.target.dataset.index)
+            game.playRound(parseInt(event.target.dataset.index))
             renderSquareContent();
         })
     })
@@ -49,6 +50,7 @@ const displayController = (() => {
         gameboard.resetGrid();
         game.restartGame();
         renderSquareContent();
+        setMessage("Player X turn");
     });
 
     const renderSquareContent = () => {
@@ -56,22 +58,33 @@ const displayController = (() => {
             squares[i].textContent = gameboard.getSquare(i);
         }
     };
+
+    const setMessage = ( message ) => {
+        playerTurn.textContent = message;
+    }
+
+    return { setMessage }
+
 })();
 
 const game = (() => {
     const playerX = Player("X");
     const playerO = Player("O");
     let round = 1;
-    let endGame = false;
+    let gameEndedWithWinner = false;
 
     const playRound = (index) => {
         gameboard.setSquare(index, getPlayerSign());
-
         if( round >= 5 ) {
             checkWinner(index);
         }
 
-        round++;
+        if( !gameEndedWithWinner && round !== 9 ) {
+            round++;
+            displayController.setMessage(`Player ${getPlayerSign()} turn`);
+        } else if ( round === 9 ) {
+            displayController.setMessage(`Tie`);
+        }
     }
 
     const getPlayerSign = () => {
@@ -94,24 +107,24 @@ const game = (() => {
             [2, 4, 6]
         ];
 
-        const subarraysWithThree = winnableSituations.filter(subarray => subarray.includes(parseInt(index)));
+        const subarraysWithThree = winnableSituations.filter(subarray => subarray.includes(index));
         
         subarraysWithThree.forEach(subarray => {
             const isWinningSituation = subarray.every(squareIndex => gameboard.getSquare(squareIndex) === getPlayerSign());
             if (isWinningSituation) {
-              console.log("Player " + getPlayerSign() + " wins!");
-              endGame = true;
+                displayController.setMessage(`Player ${getPlayerSign()} has won!`);
+                gameEndedWithWinner = true;
             }
-          });
+        });
     };
 
     const isEndGame = () => {
-        return endGame;
+        return gameEndedWithWinner;
     }
 
     const restartGame = () => {
         round = 1;
-        endGame = false;
+        gameEndedWithWinner = false;
     }
 
     return {playRound, isEndGame, restartGame};

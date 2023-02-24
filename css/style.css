@@ -11,6 +11,7 @@ header {
 .heading {
     color: var(--white);
     font-size: 5rem;
+    margin-bottom: 0;
 }
 
 body {
@@ -22,6 +23,10 @@ main {
     display: flex;
     align-items: center;
     flex-direction: column;
+}
+
+.playerTurn {
+    font-size: 3rem;
 }
 
 .grid {
